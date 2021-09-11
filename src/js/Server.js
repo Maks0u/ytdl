@@ -33,11 +33,7 @@ class Server {
     }
 
     home = (req, res) => {
-        // res.sendFile('views/index.html', { root: path.join(__dirname, '../../') });
-
         const indexFile = fs.readFileSync(path.join(__dirname, '../../views', 'index.html'), { encoding: 'utf-8' });
-        const tableFile = fs.readFileSync(path.join(__dirname, '../../views', 'table.html'), { encoding: 'utf-8' });
-        const result = indexFile.replace('{{ table }}', tableFile);
 
         res.setHeader('Content-Type', 'text/html');
         res.status(200);
