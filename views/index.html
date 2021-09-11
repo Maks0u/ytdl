@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        body {
+            background-color: black;
+        }
+
+        .form {
+            text-align: center;
+            padding: 32px;
+        }
+
+        input {
+            font-size: 20px;
+            width: 480px;
+        }
+
+        button {
+            font-size: 20px;
+            width: 160px;
+        }
+    </style>
+    <title>HTTP Video stream</title>
+</head>
+
+<body>
+    <div class="form">
+        <input id="search" type="text" />
+        <!-- <button onclick="search.send()">Search</button> -->
+    </div>
+
+    <video id="videoPlayer" width="100%" controls autoplay>
+        <source src="http://localhost:3000/video" type="video/mp4" />
+    </video>
+</body>
+<!-- <script>
+    class Search {
+        constructor() {
+            this.searchString = document.getElementById("search").value;
+        }
+        send() {
+            this.searchString = document.getElementById("search").value;
+            const body = { searchString: this.searchString }
+            fetch('http://localhost:8000/search', {
+                method: "post",
+                body: JSON.stringify(body),
+                headers: { "Content-type": "application/json" }
+            }).then((response) => document.location.reload());
+        }
+    }
+    const search = new Search();
+</script> -->
+
+</html>
