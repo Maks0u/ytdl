@@ -1,8 +1,14 @@
 class Config {
     constructor() {
-        this.protocol = process.env.YTDL_PROCOTOL || 'http';
-        this.host = process.env.YTDL_HOST || 'localhost';
-        this.port = process.env.YTDL_PORT || '3000';
+        this.serverprotocol = process.env.YTDL_SERVER_PROCOTOL || 'http';
+        this.serverhost = process.env.YTDL_SERVER_HOST || 'localhost';
+        this.serverport = process.env.YTDL_SERVER_PORT || '3000';
+
+        this.mainprotocol = process.env.YTDL_MAIN_PROCOTOL || 'http';
+        this.mainhost = process.env.YTDL_MAIN_HOST || 'localhost';
+        this.mainport = process.env.YTDL_MAIN_PORT || '3000';
+
+        this.searchlimit = process.env.YTDL_SEARCHLIMIT || '10';
     }
 }
 

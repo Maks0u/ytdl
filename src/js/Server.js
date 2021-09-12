@@ -7,10 +7,8 @@ const utils = require('./utils');
 
 class Server {
 
-    constructor(protocol, host, port) {
-        this.protocol = protocol;
-        this.host = host;
-        this.port = port;
+    constructor(config) {
+        this.config = config;
 
         this.app = express();
 
@@ -22,17 +20,22 @@ class Server {
         this.app.use(cors(this.corsOptions));
 
         this.app.get('/', this.home.bind(this));
+        this.app.get('/script.js', this.script.bind(this));
         this.app.get('/style.css', this.style.bind(this));
         this.app.get('/icons.css', this.icons.bind(this));
-        this.app.get('/script.js', this.script.bind(this));
+        this.app.get('/webfonts/:filename', this.webfonts.bind(this));
 
         this.app.post('/search', this.search.bind(this));
-        this.app.post('/url', this.getVideoURL.bind(this));
+        this.app.post('/play', this.getVideoURL.bind(this));
+        this.app.post('/download', this.getVideoBinary.bind(this));
+        this.app.post('/audio', this.getAudioURL.bind(this));
+        this.app.post('/audiodownload', this.getAudioBinary.bind(this));
     }
 
     start = () => {
-        http.createServer(this.app).listen(this.port);
-        console.log(`Server running on port ${this.port}`)
+        const port = this.config.serverport;
+        http.createServer(this.app).listen(port);
+        console.log(`Server running on port ${port}`)
     }
 
     home = (req, res) => {
@@ -47,18 +50,21 @@ class Server {
         res.sendFile('views/style.css', { root: path.join(__dirname, '../../') });
     }
 
-    icons = (req, res) => {
-        res.sendFile('uicons-regular-rounded/css/uicons-regular-rounded.css', { root: path.join(__dirname, '../../') });
-    }
-
     script = (req, res) => {
-        // res.sendFile('views/script.js', { root: path.join(__dirname, '../../') });
         const scriptFile = fs.readFileSync(path.join(__dirname, '../../views', 'script.js'), { encoding: 'utf-8' });
-        const result = scriptFile.replace(/{{ protocol }}/g, this.protocol).replace(/{{ host }}/g, this.host).replace(/{{ port }}/g, this.port);
+        const result = scriptFile.replace(/{{ protocol }}/g, this.config.mainprotocol).replace(/{{ host }}/g, this.config.mainhost).replace(/{{ port }}/g, this.config.mainport);
         res.setHeader('Content-Type', 'application/javascript');
         res.status(200);
         res.send(result);
         res.end();
+    }
+
+    icons = (req, res) => {
+        res.sendFile('uicons-regular-rounded/css/uicons-regular-rounded.css', { root: path.join(__dirname, '../../') });
+    }
+
+    webfonts = (req, res) => {
+        res.sendFile(`uicons-regular-rounded/webfonts/${req.params.filename}`, { root: path.join(__dirname, '../../') });
     }
 
     search = async (req, res) => {
@@ -76,11 +82,36 @@ class Server {
 
     getVideoURL = async (req, res) => {
         const url = req.body.url;
-        const result = (await utils.getMedia(url)).url;
+        const result = (await utils.getFormat(url)).url;
         res.setHeader('Content-Type', 'text/plain');
         res.status(200);
         res.json(result);
         res.end();
+    }
+
+    getVideoBinary = (req, res) => {
+        const url = req.body.url;
+        const ytdlReadableStream = utils.ytdlReadable(url);
+        res.setHeader('Content-Type', 'video/mp4');
+        ytdlReadableStream.pipe(res);
+        res.status(200);
+    }
+
+    getAudioURL = async (req, res) => {
+        const url = req.body.url;
+        const result = (await utils.getFormat(url, 'highestaudio')).url;
+        res.setHeader('Content-Type', 'text/plain');
+        res.status(200);
+        res.json(result);
+        res.end();
+    }
+
+    getAudioBinary = (req, res) => {
+        const url = req.body.url;
+        const ytdlReadableStream = utils.ytdlReadableAudio(url);
+        res.setHeader('Content-Type', 'audio/webm');
+        ytdlReadableStream.pipe(res);
+        res.status(200);
     }
 }
 

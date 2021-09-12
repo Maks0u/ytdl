@@ -9,22 +9,33 @@ body {
 .form {
     text-align: center;
     padding: 32px;
+    font-size: 20px;
 }
 
 input {
-    font-size: 20px;
+    font-size: inherit;
     width: 600px;
+    padding: 16px;
 }
 
 button {
-    font-size: 20px;
+    font-size: inherit;
     width: 160px;
+    padding: 16px;
+}
+
+button:hover {
+    cursor: pointer;
 }
 
 table {
     margin: auto;
     text-align: left;
-    width: 80%;
+    width: 90%;
+}
+
+thead {
+    opacity: 0;
 }
 
 th {
@@ -36,18 +47,39 @@ td {
     padding-left: 16px;
 }
 
+td.col-1 {
+    width: 10%;
+}
+
+td.col-2 {
+    width: 58%;
+}
+
+td.col-3 {
+    width: 8%;
+}
+
+td.col-4 {
+    width: 8%;
+}
+
+td.col-5 {
+    width: 8%;
+}
+
+td.col-6 {
+    width: 8%;
+}
+
 img {
-    height: 100px;
+    height: 80px;
 }
 
-svg {
-    height: 60px;
+span {
+    font-size: 32px;
+    vertical-align: middle;
 }
 
-button.play {
-    opacity: 0;
-}
-
-button.play>svg {
-    opacity: 1;
+span:hover {
+    cursor: pointer;
 }

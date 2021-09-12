@@ -15,18 +15,66 @@ class Main {
             .then((response) => response.json())
             .then(data => {
                 new List(data);
-                console.log(data);
             });
     }
-    open(yturl) {
-        const body = { url: yturl }
-        fetch("{{ protocol }}://{{ host }}:{{ port }}/url", {
+    play(yturl) {
+        const body = { url: yturl };
+        fetch("{{ protocol }}://{{ host }}:{{ port }}/play", {
             method: "post",
             body: JSON.stringify(body),
             headers: { "Content-type": "application/json" }
         })
             .then((response) => response.json())
             .then(data => window.open(data));
+    }
+    download(yturl) {
+        const body = { url: yturl };
+        fetch("{{ protocol }}://{{ host }}:{{ port }}/download", {
+            method: "post",
+            body: JSON.stringify(body),
+            headers: { "Content-type": "application/json" }
+        })
+            .then(response => response.blob())
+            .then(blob => {
+                const blobURL = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.href = blobURL;
+                anchor.download = 'video.mp4';
+                document.body.appendChild(anchor);
+                anchor.click();
+                document.body.removeChild(anchor);
+                window.URL.revokeObjectURL(blob);
+            });
+    }
+    audio(yturl) {
+        const body = { url: yturl };
+        fetch("{{ protocol }}://{{ host }}:{{ port }}/audio", {
+            method: "post",
+            body: JSON.stringify(body),
+            headers: { "Content-type": "application/json" }
+        })
+            .then(response => response.json())
+            .then(data => window.open(data));
+    }
+
+    audiodownload(yturl) {
+        const body = { url: yturl };
+        fetch("{{ protocol }}://{{ host }}:{{ port }}/audiodownload", {
+            method: "post",
+            body: JSON.stringify(body),
+            headers: { "Content-type": "application/json" }
+        })
+            .then(response => response.blob())
+            .then(blob => {
+                const blobURL = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.href = blobURL;
+                anchor.download = 'audio.ogg';
+                document.body.appendChild(anchor);
+                anchor.click();
+                document.body.removeChild(anchor);
+                window.URL.revokeObjectURL(blob);
+            });
     }
 }
 
@@ -40,18 +88,25 @@ class Video {
 
 class List {
     constructor(list) {
-        this.element = document.getElementById("tablebody");
+        this.tableHead = document.getElementById("tablehead");
+        this.tableBody = document.getElementById("tablebody");
         this.innerHTML = "";
         this.list = list;
 
         this.build();
     }
     build() {
-        this.list.forEach(element => {
-            const video = new Video(element.bestThumbnail.url, element.title, element.url);
-            this.innerHTML += `<tr><td><img src="${video.thumbnail}"/></td><td>${video.title}</td><td></td><td><svg onclick="main.open('${video.url}')" xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="60" height="60"><path d="M20.494,7.968l-9.54-7A5,5,0,0,0,3,5V19a5,5,0,0,0,7.957,4.031l9.54-7a5,5,0,0,0,0-8.064Zm-1.184,6.45-9.54,7A3,3,0,0,1,5,19V5A2.948,2.948,0,0,1,6.641,2.328,3.018,3.018,0,0,1,8.006,2a2.97,2.97,0,0,1,1.764.589l9.54,7a3,3,0,0,1,0,4.836Z"/></svg></td></tr>`
+        this.list.forEach(videoElement => {
+            const video = new Video(videoElement.bestThumbnail.url, videoElement.title, videoElement.url);
+            const playButton = `<span onclick="main.play('${video.url}')" class="fi-rr-play">`;
+            const videoDownload = `<span onclick="main.download('${video.url}')" class="fi-rr-download">`;
+            const audioButton = `<span onclick="main.audio('${video.url}')" class="fi-rr-file-music"`;
+            const audioDownload = `<span onclick="main.audiodownload('${video.url}')" class="fi-rr-download">`;
+            this.innerHTML += `<tr><td class="col-1"><img src="${video.thumbnail}"/></td><td class="col-2">${video.title}</td><td class="col-3">${playButton}</td><td class="col-4">${videoDownload}</td><td class="col-5">${audioButton}</td><td class="col-6">${audioDownload}</td></tr>`;
         });
-        this.element.innerHTML = this.innerHTML;
+
+        this.tableHead.style.opacity = 1;
+        this.tableBody.innerHTML = this.innerHTML;
     }
 }
 
