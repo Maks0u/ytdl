@@ -1,5 +1,6 @@
 class Config {
     constructor() {
+        this.protocol = process.env.YTDL_PROCOTOL || 'http';
         this.host = process.env.YTDL_HOST || 'localhost';
         this.port = process.env.YTDL_PORT || '3000';
     }

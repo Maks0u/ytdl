@@ -7,7 +7,9 @@ const utils = require('./utils');
 
 class Server {
 
-    constructor(port) {
+    constructor(protocol, host, port) {
+        this.protocol = protocol;
+        this.host = host;
         this.port = port;
 
         this.app = express();
@@ -22,6 +24,7 @@ class Server {
         this.app.get('/', this.home.bind(this));
         this.app.get('/style.css', this.style.bind(this));
         this.app.get('/icons.css', this.icons.bind(this));
+        this.app.get('/script.js', this.script.bind(this));
 
         this.app.post('/search', this.search.bind(this));
         this.app.post('/url', this.getVideoURL.bind(this));
@@ -34,10 +37,9 @@ class Server {
 
     home = (req, res) => {
         const indexFile = fs.readFileSync(path.join(__dirname, '../../views', 'index.html'), { encoding: 'utf-8' });
-
         res.setHeader('Content-Type', 'text/html');
         res.status(200);
-        res.send(result);
+        res.send(indexFile);
         res.end();
     }
 
@@ -47,6 +49,16 @@ class Server {
 
     icons = (req, res) => {
         res.sendFile('uicons-regular-rounded/css/uicons-regular-rounded.css', { root: path.join(__dirname, '../../') });
+    }
+
+    script = (req, res) => {
+        // res.sendFile('views/script.js', { root: path.join(__dirname, '../../') });
+        const scriptFile = fs.readFileSync(path.join(__dirname, '../../views', 'script.js'), { encoding: 'utf-8' });
+        const result = scriptFile.replace('{{ protocol }}', this.protocol).replace('{{ host }}', this.host).replace('{{ port }}', this.port);
+        res.setHeader('Content-Type', 'application/javascript');
+        res.status(200);
+        res.send(result);
+        res.end();
     }
 
     search = async (req, res) => {
