@@ -69,7 +69,7 @@ class Main {
                 const blobURL = window.URL.createObjectURL(blob);
                 const anchor = document.createElement('a');
                 anchor.href = blobURL;
-                anchor.download = 'audio.ogg';
+                anchor.download = 'audio.webm';
                 document.body.appendChild(anchor);
                 anchor.click();
                 document.body.removeChild(anchor);
