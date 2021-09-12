@@ -54,7 +54,7 @@ class Server {
     script = (req, res) => {
         // res.sendFile('views/script.js', { root: path.join(__dirname, '../../') });
         const scriptFile = fs.readFileSync(path.join(__dirname, '../../views', 'script.js'), { encoding: 'utf-8' });
-        const result = scriptFile.replace('{{ protocol }}', this.protocol).replace('{{ host }}', this.host).replace('{{ port }}', this.port);
+        const result = scriptFile.replace(/{{ protocol }}/g, this.protocol).replace(/{{ host }}/g, this.host).replace(/{{ port }}/g, this.port);
         res.setHeader('Content-Type', 'application/javascript');
         res.status(200);
         res.send(result);
