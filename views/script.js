@@ -7,7 +7,7 @@ class Main {
         this.searchString = document.getElementById("search").value;
         if (!this.searchString) return;
         const body = { searchString: this.searchString }
-        fetch("{{ protocol }}://{{ host }}:{{ port }}/search", {
+        fetch("{{ baseurl }}/search", {
             method: "post",
             body: JSON.stringify(body),
             headers: { "Content-type": "application/json" }
@@ -19,7 +19,7 @@ class Main {
     }
     play(yturl) {
         const body = { url: yturl };
-        fetch("{{ protocol }}://{{ host }}:{{ port }}/play", {
+        fetch("{{ baseurl }}/play", {
             method: "post",
             body: JSON.stringify(body),
             headers: { "Content-type": "application/json" }
@@ -29,7 +29,7 @@ class Main {
     }
     download(yturl) {
         const body = { url: yturl };
-        fetch("{{ protocol }}://{{ host }}:{{ port }}/download", {
+        fetch("{{ baseurl }}/download", {
             method: "post",
             body: JSON.stringify(body),
             headers: { "Content-type": "application/json" }
@@ -48,7 +48,7 @@ class Main {
     }
     audio(yturl) {
         const body = { url: yturl };
-        fetch("{{ protocol }}://{{ host }}:{{ port }}/audio", {
+        fetch("{{ baseurl }}/audio", {
             method: "post",
             body: JSON.stringify(body),
             headers: { "Content-type": "application/json" }
@@ -59,7 +59,7 @@ class Main {
 
     audiodownload(yturl) {
         const body = { url: yturl };
-        fetch("{{ protocol }}://{{ host }}:{{ port }}/audiodownload", {
+        fetch("{{ baseurl }}/audiodownload", {
             method: "post",
             body: JSON.stringify(body),
             headers: { "Content-type": "application/json" }

@@ -4,9 +4,11 @@ class Config {
         this.serverhost = process.env.YTDL_SERVER_HOST || 'localhost';
         this.serverport = process.env.YTDL_SERVER_PORT || '3000';
 
-        this.mainprotocol = process.env.YTDL_MAIN_PROTOCOL || 'http';
-        this.mainhost = process.env.YTDL_MAIN_HOST || 'localhost';
-        this.mainport = process.env.YTDL_MAIN_PORT || '3000';
+        this.publicprotocol = process.env.YTDL_PUBLIC_PROTOCOL || 'http';
+        this.publichost = process.env.YTDL_PUBLIC_HOST || 'localhost';
+        this.publicport = process.env.YTDL_PUBLIC_PORT || '3000';
+
+        this.webpath = process.env.YTDL_WEB_PATH || '';
 
         this.searchlimit = process.env.YTDL_SEARCHLIMIT || '10';
     }

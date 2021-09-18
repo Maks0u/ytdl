@@ -52,7 +52,8 @@ class Server {
 
     script = (req, res) => {
         const scriptFile = fs.readFileSync(path.join(__dirname, '../../views', 'script.js'), { encoding: 'utf-8' });
-        const result = scriptFile.replace(/{{ protocol }}/g, this.config.mainprotocol).replace(/{{ host }}/g, this.config.mainhost).replace(/{{ port }}/g, this.config.mainport);
+        const baseUrl = `${this.config.publicprotocol}://${this.config.publichost}:${this.config.publicport}${this.config.webpath}`;
+        const result = scriptFile.replace(/{{ baseurl }}/g, baseUrl);
         res.setHeader('Content-Type', 'application/javascript');
         res.status(200);
         res.send(result);
